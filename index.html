@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos de Assinatura - Sistema de Estoque</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-principal: #0f172a;       /* Slate 900 */
+            --bg-card: #1e293b;            /* Slate 800 */
+            --bg-card-destaque: #334155;   /* Slate 700 */
+            --texto-claro: #f8fafc;        /* Slate 50 */
+            --texto-mutado: #94a3b8;       /* Slate 400 */
+            --cor-primaria: #10b981;       /* Esmeralda */
+            --cor-destaque: #6366f1;       /* Indigo */
+            --borda: rgba(148, 163, 184, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-claro);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        /* Barra de Navegação Superior */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav.secondary {
+            color: var(--texto-mutado);
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--borda);
+        }
+
+        .btn-nav.secondary:hover {
+            color: var(--texto-claro);
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: var(--texto-mutado);
+        }
+
+        .btn-nav.primary {
+            color: var(--texto-claro);
+            background-color: var(--cor-destaque);
+            border: 1px solid transparent;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-nav.primary:hover {
+            background-color: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        /* Cabeçalho da Tela */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.05em;
+        }
+
+        .header h1 span {
+            color: var(--cor-primaria);
+        }
+
+        .header p {
+            color: var(--texto-mutado);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* SEÇÃO DO VÍDEO DE DEMONSTRAÇÃO */
+        .video-section {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 4rem auto;
+            text-align: center;
+        }
+
+        .video-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--texto-claro);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9; /* Mantém a proporção do vídeo perfeita */
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--borda);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Grid dos Cards de Planos */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+            justify-content: center;
+            margin-bottom: 3.5rem;
+        }
+
+        /* Estrutura Base do Card */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: left;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 540px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .card.destaque {
+            border-color: var(--cor-destaque);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+        }
+
+        .badge-pop {
+            position: absolute;
+            top: -12px;
+            right: 24px;
+            background: var(--cor-destaque);
+            color: var(--texto-claro);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .plan-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--texto-claro);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .plan-description {
+            color: var(--texto-mutado);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--texto-mutado);
+            font-weight: 400;
+            margin-left: 0.25rem;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--borda);
+            margin-bottom: 1.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            font-size: 0.95rem;
+            color: var(--texto-claro);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .features-list li i {
+            color: var(--cor-primaria);
+            font-size: 1rem;
+            width: 16px;
+        }
+
+        .features-list li.destaque-feature i {
+            color: var(--cor-destaque);
+        }
+
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-mensal {
+            background-color: var(--bg-card-destaque);
+            color: var(--texto-claro);
+        }
+
+        .btn-mensal:hover {
+            background-color: #475569;
+        }
+
+        .btn-trimestral {
+            background-color: var(--cor-destaque);
+            color: var(--texto-claro);
+        }
+
+        .btn-trimestral:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Central de Atendimento e Vendas */
+        .secao-vendas {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .secao-vendas h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .secao-vendas p {
+            color: var(--texto-mutado);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-contatos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .card-contato {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: var(--bg-principal);
+            border: 1px solid var(--borda);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            color: var(--texto-claro);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .card-contato:hover {
+            border-color: var(--cor-primaria);
+            background-color: rgba(16, 185, 129, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .card-contato i {
+            font-size: 1.2rem;
+        }
+
+        .card-contato.whatsapp i { color: #25d366; }
+        .card-contato.telegram i { color: #0088cc; }
+        .card-contato.email i { color: #ea4335; }
+
+        .footer-info {
+            margin-top: 2.5rem;
+            color: var(--texto-mutado);
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        /* Estilização da Logo */
+        .plan-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo-plano {
+            height: 65px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2)); 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="top-nav">
+           
+            
+            <a href="https://sge-estoqly.github.io/SGE.Estoqly/" target="_blank" rel="noopener noreferrer" class="btn-nav primary">
+                <i class="fa-solid fa-right-to-bracket"></i> Acessar o Sistema
+            </a>
+        </div>
+        
+        <div class="header">
+            <h1>Escolha o plano ideal para a sua <span>EMPRESA</span></h1>
+            <p>Tenha o controle total do seu estoque de alto valor e impeça o desperdício de produtos por vencimento de forma simples e rápida.</p>
+        </div>
+
+        <div class="video-section">
+            <h2>Conheça o SGE Estoqly por dentro 🎥</h2>
+            <div class="video-wrapper">
+                <iframe src="https://youtu.be/dkB-Vs_KEEo" 
+                        title="Demonstração do Sistema SGE Estoqly" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="pricing-grid">
+            
+            <div class="card">
+                <div>
+                    <div class="plan-header">
+                        <img src="logo.png" class="logo-plano" alt="SGE Estoqly">
+                    </div>
+                    <div class="plan-name">Plano Mensal</div>
+                    <p class="plan-description">Ideal para experimentar o sistema e organizar o estoque inicial da sua EMPRESA.</p>
+                    <div class="plan-price">R$ 119,90<span>/mês</span></div>
+                    
+                    <div class="divider"></div>
+                    
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Controle de Estoque Inteligente</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Alertas de Validade (Amarelo/Vermelho)</strong></li>
+                        <li><i class="fa-solid fa-check"></i> Suporte Especializado 24 Horas</li>
+                        <li><i class="fa-solid fa-check"></i> Cadastro Ilimitado de Itens</li>
+                        <li><i class="fa-solid fa-check"></i> Acesso Seguro via Celular e PC</li>
+                        <li><i class="fa-solid fa-check"></i> Banco de Dados Isolado na Nuvem</li>
+                    </ul>
+                </div>
+                <a href=" https://mpago.la/2kpkH6i" target="_blank" class="btn-action btn-mensal">Assinar Plano Mensal</a>
+            </div>
+
+            <div class="card destaque">
+                <div class="badge-pop">Mais Vendido / Melhor Escolha</div>
+                <div>
+                    <div class="plan-header">
+                        <img src="logo.png" class="logo-plano" alt="SGE Estoqly">
+                    </div>
+                    <div class="plan-name">Plano Trimestral</div>
+                    <p class="plan-description">Para quem quer economizar e garantir proteção contínua contra produtos vencidos.</p>
+                    <div class="plan-price">R$ 299,90<span>/trimestre</span></div>
+                    
+                    <div class="divider"></div>
+                    
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check"></i> Controle de Estoque Inteligente</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Alertas de Validade (Amarelo/Vermelho)</strong></li>
+                        <li class="destaque-feature"><i class="fa-solid fa-circle-check"></i> <strong>Suporte VIP Prioritário 24 Horas</strong></li>
+                        <li><i class="fa-solid fa-check"></i> Cadastro Ilimitado de Itens</li>
+                        <li><i class="fa-solid fa-check"></i> Acesso Seguro via Celular e PC</li>
+                        <li><i class="fa-solid fa-check"></i> Banco de Dados Isolado na Nuvem</li>
+                        <li><i class="fa-solid fa-check"></i> Implantação e Configuração Inclusas</li>
+                    </ul>
+                </div>
+                <a href=" https://mpago.la/31E34cx" target="_blank" class="btn-action btn-trimestral">Assinar Plano Trimestral</a>
+            </div>
+
+        </div>
+
+        <div class="secao-vendas" id="vendas">
+            <h2><i class="fa-solid fa-headset" style="color: var(--cor-destaque);"></i> Contrate ou Tire Dúvidas</h2>
+            <p>Escolheu seu plano ou precisa de uma demonstração? Fale direto com a nossa equipe de ativação:</p>
+            
+            <div class="grid-contatos">
+                <a href="https://wa.me/5582988605068?text=Olá!%20Gostaria%20de%20ativar%20o%20plano%20do%20meu%20sistema%20de%20estoque." target="_blank" class="card-contato whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>(82) 98860-5068</span>
+                </a>
+
+                <a href="https://t.me/SGEEstoqly" target="_blank" class="card-contato telegram">
+                    <i class="fa-brands fa-telegram"></i>
+                    <span>@SGEEstoqly</span>
+                </a>
+
+                <a href="mailto:sidcleysidcley@gmail.com?subject=Assinatura%20Sistema%20Estoque" class="card-contato email">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>suporte.estoqly@gmail.com
+</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            <i class="fa-solid fa-shield-halved" style="color: var(--cor-primaria)"></i>
+            <span>Licenciamento direto com suporte homologado. Ativação imediata pós-contato.</span>
+        </div>
+
+    </div>
+
+</body>
+</html>
